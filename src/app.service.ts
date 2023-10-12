@@ -1,16 +1,17 @@
 import { Injectable, Param } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AppService {
   private products = [
     {
-      id: 1,
+      id: uuidv4().toString(),
       name: "product 1",
       price: 1000,
       stock: 25,
     },
     {
-      id: 2,
+      id: uuidv4().toString(),
       name: "product 2",
       price: 500,
       stock: 50,
@@ -34,8 +35,9 @@ export class AppService {
 
   postProduct(datos): any {
     try {
-      this.products.push(datos)
-      return datos
+      const datoFormateado={...datos,id:uuidv4().toString()}
+      this.products.push(datoFormateado)
+      return datoFormateado
     } catch (error) {
       throw new Error("Error en postProduct" + JSON.stringify(error));
     }
@@ -52,8 +54,9 @@ export class AppService {
   }
 
   deleteProduct(id): any {
+    const indice = this.products.findIndex(product => product.id === parseInt(id));
     try {
-      this.products.splice(this.products.findIndex(obj => obj.id === parseInt(id)), 1)
+      this.products.splice(indice, 1)
       return this.products
     } catch (error) {
       throw new Error("Error en deleteProduct" + JSON.stringify(error));
